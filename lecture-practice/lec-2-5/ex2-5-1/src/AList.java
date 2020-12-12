@@ -4,9 +4,9 @@
  * @author Josh Hug
  */
 
-public class AList {
+public class AList<Item> {
 
-    private int[] intArray;
+    private Item[] intArray;
     private int size;
 
     /**
@@ -14,14 +14,14 @@ public class AList {
      */
     public AList() {
         size = 0;
-        intArray = new int[100];
+        intArray = (Item[]) new Object[100];
     }
 
     /**
      * Resizes the underlying array to the target capacity.
      */
     private void resize(int capacity) {
-        int[] a = new int[capacity];
+        Item[] a = (Item[]) new Object[capacity];
         System.arraycopy(intArray, 0, a, 0, size);
         intArray = a;
     }
@@ -29,7 +29,7 @@ public class AList {
     /**
      * Inserts X into the back of the list.
      */
-    public void addLast(int x) {
+    public void addLast(Item x) {
         if (size == intArray.length) {
             resize(size + 1);
         }
@@ -40,17 +40,15 @@ public class AList {
     /**
      * Returns the item from the back of the list.
      */
-    public int getLast() {
-        if (size > 0) return intArray[size - 1];
-        return 0;
+    public Item getLast() {
+        return intArray[size - 1];
     }
 
     /**
      * Gets the ith item in the list (0 is the front).
      */
-    public int get(int i) {
-        if (size >= i) return intArray[i];
-        return 0;
+    public Item get(int i) {
+        return intArray[i];
     }
 
     /**
@@ -64,13 +62,9 @@ public class AList {
      * Deletes item from back of the list and
      * returns deleted item.
      */
-    public int removeLast() {
-        if (size > 0) {
-            int removed = intArray[size - 1];
-            intArray[size - 1] = 0;
-            size--;
-            return removed;
-        }
-        return 0;
+    public Item removeLast() {
+        Item x = getLast();
+        size--;
+        return x;
     }
 }
