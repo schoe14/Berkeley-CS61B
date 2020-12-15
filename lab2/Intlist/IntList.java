@@ -1,11 +1,13 @@
 import java.util.Formatter;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * A naked recursive list of integers, similar to what we saw in lecture 3, but
  * with a large number of additional methods.
  *
  * @author P. N. Hilfinger, with some modifications by Josh Hug and melaniecebula
- *         [Do not modify this file.]
+ * [Do not modify this file.]
  */
 public class IntList {
     /**
@@ -29,7 +31,7 @@ public class IntList {
      * A List with null rest, and first = 0.
      */
     public IntList() {
-    /* NOTE: public IntList () { }  would also work. */
+        /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
 
@@ -82,7 +84,15 @@ public class IntList {
 
     public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        IntList ptr = A;
+        while (ptr.rest != null) {
+            ptr = ptr.rest;
+        }
+        ptr.rest = B;
+        return A;
     }
 
     /**
@@ -91,22 +101,37 @@ public class IntList {
      */
     public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        IntList result = new IntList(A.first, null);
+        IntList ptr = result;
+        while (A.rest != null) {
+            ptr.rest = new IntList(A.rest.first, null);
+            ptr = ptr.rest;
+            A = A.rest;
+        }
+        ptr.rest = B;
+        return result;
     }
 
+    public static void main(String[] args) {
+//        IntList origL = IntList.of(1, 2, 3);
+//        dSquareList(origL);
+//        IntList squaredList = squareListIterative(origL);
 
+        IntList A = IntList.of(1, 2, 3);
+        IntList B = IntList.of(4, 5, 6);
+        IntList dcatenate = IntList.dcatenate(A, B);
 
+//        IntList A = IntList.of();
+//        IntList B = IntList.of(1,2,3);
+//        IntList dcatenate = IntList.dcatenate(A, B);
 
-
-
-
-
-
-
-
-
-
-
+//        IntList A = IntList.of(1, 2, 3);
+//        IntList B = IntList.of(4, 5, 6);
+//        IntList catenate = IntList.catenate(A, B);
+    }
 
 
     /**
