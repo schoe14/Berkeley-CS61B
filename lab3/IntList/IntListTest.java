@@ -15,7 +15,6 @@ public class IntListTest {
         IntList one = new IntList(1, null);
         IntList twoOne = new IntList(2, one);
         IntList threeTwoOne = new IntList(3, twoOne);
-
         IntList x = IntList.of(3, 2, 1);
         assertEquals(threeTwoOne, x);
     }
@@ -25,6 +24,19 @@ public class IntListTest {
         IntList L = IntList.of(1, 2, 3);
         IntList.dSquareList(L);
         assertEquals(IntList.of(1, 4, 9), L);
+    }
+
+    @Test
+    public void testReverse() {
+        IntList one = IntList.of(1, 2, 3);
+        IntList two = IntList.reverse(one);
+        assertEquals(IntList.of(3, 2, 1), two);
+
+        assertNotEquals(IntList.reverse(one), one);
+
+        // null input
+        IntList three = new IntList();
+        assertEquals(null, IntList.reverse(three));
     }
 
     /**
@@ -67,7 +79,7 @@ public class IntListTest {
     }
 
     /** If you're running this from the command line, you'll need
-      * to add a main method. See ArithmeticTest.java for an
-      * example. */
+     * to add a main method. See ArithmeticTest.java for an
+     * example. */
 
 }
