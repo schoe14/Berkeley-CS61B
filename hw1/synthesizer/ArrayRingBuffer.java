@@ -1,6 +1,8 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
+
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
@@ -35,6 +37,19 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public void enqueue(T x) {
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
+        if (isFull()) {
+            throw new RuntimeException("Ring buffer overflow");
+        }
+        if (isEmpty()) {
+            first = this.capacity / 2;
+            last = first;
+        }
+        rb[last] = x;
+        last++;
+        fillCount++;
+        if (last == this.capacity) {
+            last = 0;
+        }
     }
 
     /**
@@ -44,7 +59,17 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
-        return null;
+        if (isEmpty()) {
+            throw new RuntimeException("Ring buffer underflow");
+        }
+        T temp = rb[first];
+        rb[first] = null;
+        first++;
+        fillCount--;
+        if (first == this.capacity) {
+            first = 0;
+        }
+        return temp;
     }
 
     /**
@@ -52,8 +77,44 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public T peek() {
         // TODO: Return the first item. None of your instance variables should change.
-        return null;
+        return rb[first];
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayRingBufferIterator(first, rb, this.capacity);
+    }
+
+    private class ArrayRingBufferIterator implements Iterator<T> {
+        int pointer;
+        T[] data;
+        int cap;
+
+        ArrayRingBufferIterator(int f, T[] array, int capacity) {
+            pointer = f;
+            data = array;
+            cap = capacity;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return data[pointer] != null;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T temp = data[pointer];
+            data[pointer] = null;
+            pointer++;
+            if (pointer == cap) {
+                pointer = 0;
+            }
+            return temp;
+        }
+    }
+
 }
