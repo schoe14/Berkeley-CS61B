@@ -83,23 +83,29 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     // TODO: When you get to part 5, implement the needed code to support iteration.
     @Override
     public Iterator<T> iterator() {
-        return new ArrayRingBufferIterator(first, rb, this.capacity);
+        return new ArrayRingBufferIterator();
     }
 
     private class ArrayRingBufferIterator implements Iterator<T> {
         int pointer;
-        T[] data;
-        int cap;
+        int lastIndex;
 
-        ArrayRingBufferIterator(int f, T[] array, int capacity) {
-            pointer = f;
-            data = array;
-            cap = capacity;
+        ArrayRingBufferIterator() {
+            pointer = first;
+            if (capacity == fillCount) {
+                if (last == 0) {
+                    lastIndex = capacity - 1;
+                } else {
+                    lastIndex = last - 1;
+                }
+            } else {
+                lastIndex = last;
+            }
         }
 
         @Override
         public boolean hasNext() {
-            return data[pointer] != null;
+            return pointer != lastIndex;
         }
 
         @Override
@@ -107,10 +113,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            T temp = data[pointer];
-            data[pointer] = null;
+            T temp = rb[pointer];
             pointer++;
-            if (pointer == cap) {
+            if (pointer == capacity) {
                 pointer = 0;
             }
             return temp;
