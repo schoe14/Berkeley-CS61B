@@ -1,4 +1,5 @@
 package hw2;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -18,12 +19,6 @@ public class Percolation {
         grid = new boolean[N][N];
         bottom = N * N + 1;
         uf = new WeightedQuickUnionUF(N * N + 2);
-//        int i = 1;
-//        while (i <= N) {
-//            uf.union(top, i);
-//            uf.union(bottom, bottom - i);
-//            i++;
-//        }
     }
 
     // open the site (row, col) if it is not open already
@@ -42,22 +37,28 @@ public class Percolation {
             if (row == 0) {
                 uf.union(top, opened + 1);
             }
-            if (row == len - 1) {
-                uf.union(bottom, opened + 1);
-            }
             // union (same row)
             if (col - 1 >= 0 && isOpen(row, col - 1)) {
                 left = xyTo1D(row, col - 1);
                 uf.union(opened + 1, left + 1);
+                if (row == len - 1 && isFull(row, col - 1)) {
+                    uf.union(bottom, opened + 1);
+                }
             }
             if (col + 1 <= len - 1 && isOpen(row, col + 1)) {
                 right = xyTo1D(row, col + 1);
                 uf.union(opened + 1, right + 1);
+                if (row == len - 1 && isFull(row, col + 1)) {
+                    uf.union(bottom, opened + 1);
+                }
             }
             // union (same column)
             if (row - 1 >= 0 && isOpen(row - 1, col)) {
                 up = xyTo1D(row - 1, col);
                 uf.union(opened + 1, up + 1);
+                if (row == len - 1 && isFull(row - 1, col)) {
+                    uf.union(bottom, opened + 1);
+                }
             }
             if (row + 1 <= len - 1 && isOpen(row + 1, col)) {
                 down = xyTo1D(row + 1, col);

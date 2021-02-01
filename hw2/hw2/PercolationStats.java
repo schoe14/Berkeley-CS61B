@@ -1,4 +1,5 @@
 package hw2;
+
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
 
@@ -6,7 +7,7 @@ public class PercolationStats {
     int len;
     int exp;
     Percolation percolation;
-    int[] percolatedArray;
+    double[] percolatedArray;
 
     // perform T independent experiments on an N-by-N grid
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -14,19 +15,16 @@ public class PercolationStats {
             throw new IllegalArgumentException();
         }
         len = N;
-        exp = 1;
-        percolation = pf.make(N);
-        percolatedArray = new int[T];
+        exp = T;
+        percolatedArray = new double[T];
 
-        while (exp <= T) {
-            int numOfExp = StdRandom.uniform(N * N);
-            for (int i = 0; i < numOfExp; i++) {
+        for (int i = 0; i < T; i++) {
+            percolation = pf.make(N);
+            while (!percolation.percolates()) {
                 percolation.open(StdRandom.uniform(len), StdRandom.uniform(len));
             }
-            if (percolation.percolates()) {
-                percolatedArray[exp - 1] = percolation.numberOfOpenSites();
-            }
-            percolatedArray[exp - 1] = 0;
+            percolatedArray[i] = percolation.numberOfOpenSites();
+            System.out.println("numberOfOpenSites: " + percolation.numberOfOpenSites());
         }
     }
 
@@ -37,16 +35,28 @@ public class PercolationStats {
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        return 0.0;
+        if (exp == 1) {
+            return Double.NaN;
+        }
+        return StdStats.stddev(percolatedArray);
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-        return 0.0;
+        return mean() - 1.960 * (stddev() / Math.sqrt(exp));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        return 0.0;
+        return mean() + 1.960 * (stddev() / Math.sqrt(exp));
+    }
+
+    public static void main(String[] args) {
+        PercolationFactory pf = new PercolationFactory();
+        PercolationStats ps = new PercolationStats(20, 30, pf);
+        System.out.println("mean: " + ps.mean());
+        System.out.println("stddev: " + ps.stddev());
+        System.out.println("95% conf low: " + ps.confidenceLow());
+        System.out.println("95% conf high: " + ps.confidenceHigh());
     }
 }
