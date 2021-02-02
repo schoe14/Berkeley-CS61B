@@ -4,10 +4,10 @@ import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
-    int len;
-    int exp;
-    Percolation percolation;
-    double[] percolatedArray;
+    private int len;
+    private int exp;
+    private Percolation percolation;
+    private double[] percolatedArray;
 
     // perform T independent experiments on an N-by-N grid
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -51,12 +51,12 @@ public class PercolationStats {
         return mean() + 1.960 * (stddev() / Math.sqrt(exp));
     }
 
-    public static void main(String[] args) {
-        PercolationFactory pf = new PercolationFactory();
-        PercolationStats ps = new PercolationStats(20, 30, pf);
-        System.out.println("mean: " + ps.mean());
-        System.out.println("stddev: " + ps.stddev());
-        System.out.println("95% conf low: " + ps.confidenceLow());
-        System.out.println("95% conf high: " + ps.confidenceHigh());
-    }
+//    public static void main(String[] args) {
+//        PercolationFactory pf = new PercolationFactory();
+//        PercolationStats ps = new PercolationStats(20, 30, pf);
+//        System.out.println("mean: " + ps.mean());
+//        System.out.println("stddev: " + ps.stddev());
+//        System.out.println("95% conf low: " + ps.confidenceLow());
+//        System.out.println("95% conf high: " + ps.confidenceHigh());
+//    }
 }

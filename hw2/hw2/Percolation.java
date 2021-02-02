@@ -2,6 +2,9 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Percolation {
     private boolean[][] grid;
     private int len;
@@ -9,6 +12,7 @@ public class Percolation {
     private int bottom;
     private WeightedQuickUnionUF uf;
     private int numOfOpened;
+    private List<Integer> list;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N) {
@@ -19,6 +23,7 @@ public class Percolation {
         grid = new boolean[N][N];
         bottom = N * N + 1;
         uf = new WeightedQuickUnionUF(N * N + 2);
+        list = new ArrayList<>();
     }
 
     // open the site (row, col) if it is not open already
@@ -37,38 +42,44 @@ public class Percolation {
             if (row == 0) {
                 uf.union(top, opened + 1);
             }
+            if (len == 1) {
+                uf.union(bottom, opened + 1);
+            }
+            if (row == len - 1) {
+                list.add(xyTo1D(row, col) + 1);
+            }
             // union (same row)
             if (col - 1 >= 0 && isOpen(row, col - 1)) {
                 left = xyTo1D(row, col - 1);
                 uf.union(opened + 1, left + 1);
-                if (row == len - 1 && isFull(row, col - 1)) {
-                    uf.union(bottom, opened + 1);
-                }
             }
             if (col + 1 <= len - 1 && isOpen(row, col + 1)) {
                 right = xyTo1D(row, col + 1);
                 uf.union(opened + 1, right + 1);
-                if (row == len - 1 && isFull(row, col + 1)) {
-                    uf.union(bottom, opened + 1);
-                }
             }
             // union (same column)
             if (row - 1 >= 0 && isOpen(row - 1, col)) {
                 up = xyTo1D(row - 1, col);
                 uf.union(opened + 1, up + 1);
-                if (row == len - 1 && isFull(row - 1, col)) {
-                    uf.union(bottom, opened + 1);
-                }
             }
             if (row + 1 <= len - 1 && isOpen(row + 1, col)) {
                 down = xyTo1D(row + 1, col);
                 uf.union(opened + 1, down + 1);
             }
+            if (isFull(row, col) && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (uf.connected(opened + 1, list.get(i))) {
+                        uf.union(bottom, list.get(i));
+                        list.remove(i);
+                        break;
+                    }
+                }
+            }
         }
     }
 
     // 2D array to 1D
-    public int xyTo1D(int r, int c) {
+    private int xyTo1D(int r, int c) {
         return len * r + c;
     }
 
@@ -101,20 +112,28 @@ public class Percolation {
 
     // use for unit testing (not required)
     public static void main(String[] args) {
-        Percolation p = new Percolation(3);
-        p.open(1, 1);
+        Percolation p = new Percolation(6);
+        p.open(0, 5);
+        p.open(1, 5);
+        p.open(2, 5);
+        p.open(3, 5);
+        p.open(4, 5);
+        p.open(4, 4);
+        p.open(3, 3);
+        p.open(2, 3);
+        p.open(1, 3);
         p.open(1, 2);
-        p.open(0, 1);
-        System.out.println(p.isOpen(1, 1));
-        System.out.println(p.isOpen(1, 2));
-        System.out.println(p.isFull(1, 1));
-        System.out.println(p.isFull(1, 2));
-        System.out.println(p.numberOfOpenSites());
-        System.out.println(p.percolates());
+        p.open(1, 1);
+        p.open(1, 0);
         p.open(2, 0);
+        p.open(3, 0);
+        p.open(4, 0);
+        p.open(4, 1);
+        p.open(5, 1);
+        System.out.println(p.isFull(5, 1));
+        p.open(4, 3);
         System.out.println(p.percolates());
-        p.open(2, 1);
-        System.out.println(p.percolates());
-        System.out.println(p.numberOfOpenSites());
+        p.open(5, 5);
+        System.out.println(p.isFull(5, 5));
     }
 }
