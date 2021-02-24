@@ -35,27 +35,8 @@ public class SimpleOomage implements Oomage {
             return red + green + blue;
         } else {
             // todo: Write a perfect hash function for Simple Oomages.
-            int max = Math.max(red, Math.max(green, blue));
-            if (red == green && red == blue) {
-                return sum + 5;
-            }
-            if (red == green || red == blue) {
-                return sum + 4 + red + 800;
-            }
-            if (green == blue) {
-                return sum + 4 + green + 800;
-            }
-            if (max == red) {
-                sum += 1;
-            }
-            if (max == green) {
-                sum += 2;
-            }
-            if (max == blue) {
-                sum += 3;
-            }
+            return 65536 * red + 256 * green + blue;
         }
-        return sum;
     }
 
     public SimpleOomage(int r, int g, int b) {

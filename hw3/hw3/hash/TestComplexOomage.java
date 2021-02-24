@@ -43,8 +43,13 @@ public class TestComplexOomage {
         int N = 10000;
 
         // Your code here.
-        for (int i = 0; i < N; i += 1) {
-            deadlyList.add(SimpleOomage.randomSimpleOomage());
+        for (int i = 0; i < 50; i++) {
+            ArrayList<Integer> params = new ArrayList<>();
+            for (int j = 0; j < i; j++) {
+                params.add(1);
+            }
+            ComplexOomage oom = new ComplexOomage(params);
+            deadlyList.add(oom);
         }
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
